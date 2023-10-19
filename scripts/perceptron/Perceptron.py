@@ -81,7 +81,6 @@ if __name__ == '__main__':
         plt.show()
         return fig
 
-
     with PdfPages('perceptron/results.pdf') as pdf:
         for i in range(10):
             X, y = generate()
