@@ -28,19 +28,19 @@ class Perceptron:
         return labels
 
     def adjust_weights(self, x, label):
+        self.bias = self.bias + self.learning_rate * (label - self.activation_fn(x))
         for i in range(len(self.weights)):
             self.weights[i] = self.weights[i] + self.learning_rate * (label - self.activation_fn(x)) * x[i]
-            self.bias = self.bias + self.learning_rate * (label - self.activation_fn(x))
 
-    def train(self, X, y, epochs=1000):
+    def train(self, X, y, epochs=2000):
         for e in range(epochs):
             labels = self.infer(X)
             for i in range(len(X)):
                 self.adjust_weights(X[i], labels[i])
 
 
-def generate(num_samples, num_features=2, num_clusters=2):
-    return make_blobs(n_samples=50, n_features=2, centers=2)
+def generate():
+    return make_blobs(n_samples=100, n_features=2, centers=2)
 
 
 if __name__ == '__main__':
@@ -84,7 +84,7 @@ if __name__ == '__main__':
 
     with PdfPages('perceptron/results.pdf') as pdf:
         for i in range(10):
-            X, y = generate(100)
+            X, y = generate()
             fig = run_perceptron(X, y)
             pdf.savefig(fig)  # saves the current figure into the pdf
             plt.close(fig)  # close the figure to free up memory
