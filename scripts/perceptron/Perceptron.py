@@ -52,16 +52,11 @@ def synthetic():
     perceptron.train(X_train, y_train)
     predict = perceptron.infer(X_test)
 
-    count_wrong = 0
-    index = 0
+    wrong_pred_list = [predict != y_test]
 
-    for label in predict:
-        if label != y_test[index]:
-            count_wrong += 1
-        index += 1
+    wrong_pred_total = np.sum(wrong_pred_list)
 
-    print(abs(predict - y_test))
-    #print(f"Anteil der falsch klassifizierten Daten: {(abs(predict - y_test)/y_test)}")
+    print(f"Anteil der falsch klassifizierten Daten: {(wrong_pred_total/len(y_test)) * 100} %")
 
 if __name__ == '__main__':
 
