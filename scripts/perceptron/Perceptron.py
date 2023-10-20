@@ -1,8 +1,7 @@
 import numpy as np
 from sklearn.datasets import make_blobs
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_pdf import PdfPages
 from sklearn.model_selection import train_test_split
+from sklearn.datasets import load_iris
 
 class Perceptron:
     def __init__(self, num_inputs=2, learning_rate=0.01):
@@ -44,65 +43,43 @@ def generate():
 
 
 def synthetic():
+    # generate synthetic data
     X, y = generate()
-
+    # split data into train and test set
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25)
 
+    # train perceptron
     perceptron = Perceptron()
     perceptron.train(X_train, y_train)
     predict = perceptron.infer(X_test)
 
+    # calculate wrong predictions
     wrong_pred_list = [predict != y_test]
-
     wrong_pred_total = np.sum(wrong_pred_list)
+    print(f"Anteil der falsch klassifizierten syntetischen Daten: {(wrong_pred_total/len(y_test)) * 100} %")
 
-    print(f"Anteil der falsch klassifizierten Daten: {(wrong_pred_total/len(y_test)) * 100} %")
+
+def iris():
+    # load iris data
+    data = load_iris()
+    X = data.data[:100, :]
+    y = data.target[:100]
+
+    # split data into train and test set
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25)
+
+    # train perceptron
+    perc = Perceptron()
+    perc.train(X_train, y_train)
+    y_pred = perc.infer(X_test)
+
+    # calculate wrong predictions
+    wrong_pred_list = [y_pred != y_test]
+    wrong_pred= np.sum(wrong_pred_list)
+    print(f"Anteil der falsch klassifizierten iris Daten: {(wrong_pred/len(y_test)) * 100} %")
+
 
 if __name__ == '__main__':
 
     synthetic()
-
-    def run_perceptron(X, y):
-        # just for plotting
-        x_min, x_max = min(X.T[0] - 1), max(X.T[0] + 1)
-        y_min, y_max = min(X.T[1] - 1), max(X.T[1] + 1)
-
-        fig = plt.figure(figsize=(10, 5))
-
-        # plot correct class
-        ax = plt.subplot(1, 2, 1)
-        plt.title('Correct Class')
-        plt.scatter(X[:, 0], X[:, 1], c=y)
-        ax.set_xlim([x_min - 1, x_max + 1])
-        ax.set_ylim([y_min - 1, y_max + 1])
-        plt.axhline(y=0, color='gray', alpha=0.5, linestyle='dotted')
-        plt.axvline(x=0, color='gray', alpha=0.5, linestyle='dotted')
-
-        # create and train perceptron
-        perc = Perceptron()
-        perc.train(X, y)
-        y_pred = perc.infer(X)
-
-        # plot prediction
-        ax = plt.subplot(1, 2, 2)
-        plt.title('Prediction')
-        plt.scatter(X[:, 0], X[:, 1], c=y_pred)
-        ax.set_xlim([x_min - 1, x_max + 1])
-        ax.set_ylim([y_min - 1, y_max + 1])
-        plt.axhline(y=0, color='gray', alpha=0.5, linestyle='dotted')
-        plt.axvline(x=0, color='gray', alpha=0.5, linestyle='dotted')
-
-        # show decision boundary
-        x1 = np.linspace(x_min, x_max)
-        x2 = -(perc.weights[0] * x1 + perc.bias) / perc.weights[1]
-        plt.plot(x1, x2, '--r')
-        plt.show()
-        return fig
-
-#    with PdfPages('perceptron/results.pdf') as pdf:
-#        for i in range(10):
-#            X, y = generate()
-#            fig = run_perceptron(X, y)
-#            pdf.savefig(fig)  # saves the current figure into the pdf
-#            plt.close(fig)  # close the figure to free up memory
-
+    iris()
