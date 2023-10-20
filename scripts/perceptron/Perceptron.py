@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.datasets import make_blobs
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
+from sklearn.model_selection import train_test_split
 
 class Perceptron:
     def __init__(self, num_inputs=2, learning_rate=0.01):
@@ -42,7 +43,30 @@ def generate():
     return make_blobs(n_samples=100, n_features=2, centers=2)
 
 
+def synthetic():
+    X, y = generate()
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25)
+
+    perceptron = Perceptron()
+    perceptron.train(X_train, y_train)
+    predict = perceptron.infer(X_test)
+
+    count_wrong = 0
+    index = 0
+
+    for label in predict:
+        if label != y_test[index]:
+            count_wrong += 1
+        index += 1
+
+    print(abs(predict - y_test))
+    #print(f"Anteil der falsch klassifizierten Daten: {(abs(predict - y_test)/y_test)}")
+
 if __name__ == '__main__':
+
+    synthetic()
+
     def run_perceptron(X, y):
         # just for plotting
         x_min, x_max = min(X.T[0] - 1), max(X.T[0] + 1)
@@ -80,10 +104,10 @@ if __name__ == '__main__':
         plt.show()
         return fig
 
-    with PdfPages('perceptron/results.pdf') as pdf:
-        for i in range(10):
-            X, y = generate()
-            fig = run_perceptron(X, y)
-            pdf.savefig(fig)  # saves the current figure into the pdf
-            plt.close(fig)  # close the figure to free up memory
+#    with PdfPages('perceptron/results.pdf') as pdf:
+#        for i in range(10):
+#            X, y = generate()
+#            fig = run_perceptron(X, y)
+#            pdf.savefig(fig)  # saves the current figure into the pdf
+#            plt.close(fig)  # close the figure to free up memory
 
