@@ -27,16 +27,15 @@ class Perceptron:
             labels.append(self.activation_fn(x))
         return labels
 
-    def adjust_weights(self, x, label):
-        self.bias = self.bias + self.learning_rate * (label - self.activation_fn(x))
+    def adjust_weights(self, x, y):
+        self.bias = self.bias + self.learning_rate * (y - self.activation_fn(x))
         for i in range(len(self.weights)):
-            self.weights[i] = self.weights[i] + self.learning_rate * (label - self.activation_fn(x)) * x[i]
+            self.weights[i] = self.weights[i] + self.learning_rate * (y - self.activation_fn(x)) * x[i]
 
-    def train(self, X, y, epochs=2000):
+    def train(self, X, y, epochs=1000):
         for e in range(epochs):
-            labels = self.infer(X)
             for i in range(len(X)):
-                self.adjust_weights(X[i], labels[i])
+                self.adjust_weights(X[i], y[i])
 
 
 def generate():
