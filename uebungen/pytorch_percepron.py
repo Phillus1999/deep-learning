@@ -20,6 +20,7 @@ class Perceptron:
         # torch.sign gibt -1 oder 1 zurück je nachdem ob das argument negativ oder positiv ist
         # und 0 falls das Argument genau 0 ist.
         # TODO: FRAGE AN KORREKTUR: nutzt also gradient descent?
+        # TODO: NACHRICHT AN PHILLIP: WENN MAN :SIGN REMOVED; DANN KOMMEN CONTINUOUS-WERTE RAUS -> LÄUFT NICHT MEHR
         return torch.sign(torch.matmul(X, self.weights) + self.bias)
 
     def train(self, X, y, epochs=10):
