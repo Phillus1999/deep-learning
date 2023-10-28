@@ -11,7 +11,7 @@ class Perceptron:
         self.learning_rate = learning_rate
         self.bias = 1
 
-    def forward(self, X):
+    def calculate_labels(self, X):
         """
         berechnet die prediction des perceptrons
         :param X: data tensor
@@ -32,15 +32,12 @@ class Perceptron:
         """
         for epoch in range(epochs):
             # erstellt einen tensor der selben länge wie X und füllt ihn mit den predictions
-            y_pred = self.forward(X)
+            y_pred = self.calculate_labels(X)
             # erstellt einen tensor der selben länge wie y_pred und füllt ihn mit den fehlern
             error = y - y_pred
             # TODO: vielleicht hier auch vektorisieren und nicht iterativ ?
-            for i in range(len(X)):
-                # passe die gewichte an
-                self.weights = self.weights + self.learning_rate * error[i] * X[i]
-                # passe den bias an
-                self.bias = self.bias + self.learning_rate * error[i]
+            self.weights = self.weights + self.learning_rate * torch.matmul(error, X)
+            self.bias = self.bias + self.learning_rate * torch.sum(error)
 
 
 if __name__ == '__main__':
@@ -77,7 +74,7 @@ if __name__ == '__main__':
     ax = fig.add_subplot(1, 2, 2)
     ax.set_xlim(xlim)
     ax.set_ylim(ylim)
-    plt.scatter(features[:, 0], features[:, 1], c=perc.forward(features))
+    plt.scatter(features[:, 0], features[:, 1], c=perc.calculate_labels(features))
     plt.title('Predicted Labels')
 
     # plotte die entscheidungsgrenze
