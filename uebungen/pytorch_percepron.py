@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 
 class Perceptron:
-    # implement perceptron using pytorch
+    # Perzeptron implementierung mit pytorch
     def __init__(self, num_inputs=2, learning_rate=0.01):
         self.num_inputs = num_inputs
         self.weights = torch.ones(self.num_inputs)
@@ -13,7 +13,7 @@ class Perceptron:
 
     def calculate_labels(self, X):
         """
-        berechnet die prediction des perceptrons
+        berechnet die prediction des perceptron
         :param X: data tensor
         :return: label tensor
         """
@@ -22,29 +22,24 @@ class Perceptron:
         # TODO: FRAGE AN KORREKTUR: nutzt also gradient descent?
         return torch.sign(torch.matmul(X, self.weights) + self.bias)
 
-    def train(self, X, y, epochs=10):
+    def train(self, X, y, epochs=50):
         """
-        passt die gewichte und das bias des perceptrons an
+        Passt die Gewichte und das bias des perceptron an
         :param X: data tensor
         :param y: label tensor
-        :param epochs: number of epochs
+        :param epochs: anzahl der durchläufe
         :return: None
         """
         for epoch in range(epochs):
-            # erstellt einen tensor der selben länge wie X und füllt ihn mit den predictions
             y_pred = self.calculate_labels(X)
-            # erstellt einen tensor der selben länge wie y_pred und füllt ihn mit den fehlern
             error = y - y_pred
-            # TODO: vielleicht hier auch vektorisieren und nicht iterativ ?
+
             self.weights = self.weights + self.learning_rate * torch.matmul(error, X)
             self.bias = self.bias + self.learning_rate * torch.sum(error)
 
 
 if __name__ == '__main__':
-    # TODO: darstellung der entscheidungsgrenze über epochen darstellen
-    # Zwei 2x3 Matrizen
 
-    # erstelle die daten (2 features, 100 samples)
     data = make_moons(n_samples=100)
 
     # erstelle die tensoren aus den numpy arrays
@@ -55,30 +50,30 @@ if __name__ == '__main__':
     perc = Perceptron()
 
     # trainiere das perceptron
-    perc.train(features, labels, epochs=50)
+    perc.train(features, labels)
 
-    # erstelle einen Plot um das Ergebnis zu visualisieren
+    # erstelle einen Plot, um das Ergebnis zu visualisieren
     fig = plt.figure(figsize=(12, 5))
     # setze x und y limits
     xlim = (features[:, 0].min() - 0.1, features[:, 0].max() + 0.1)
     ylim = (features[:, 1].min() - 0.1, features[:, 1].max() + 0.1)
 
-    # plotte die daten mit richtigen labels
+    # plotte die daten mit den richtigen labels
     ax = fig.add_subplot(1, 2, 1)
     ax.set_xlim(xlim)
     ax.set_ylim(ylim)
     plt.scatter(features[:, 0], features[:, 1], c=labels)
     plt.title('Original Labels')
 
-    # plotte die daten mit den predictions
+    # plotte die daten mit den vorhergesagten labels
     ax = fig.add_subplot(1, 2, 2)
     ax.set_xlim(xlim)
     ax.set_ylim(ylim)
     plt.scatter(features[:, 0], features[:, 1], c=perc.calculate_labels(features))
     plt.title('Predicted Labels')
 
-    # plotte die entscheidungsgrenze
-    x1 = torch.tensor([features[:, 0].min(), features[:, 0].max()])
+    # plotte die entscheidungsgrenze des perceptrons
+    x1 = torch.tensor([features[:, 0].min() -0.1 , features[:, 0].max()])
     x2 = -(perc.weights[0] * x1 + perc.bias) / perc.weights[1]
     plt.plot(x1, x2, '--r')
 
