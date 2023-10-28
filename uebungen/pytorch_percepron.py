@@ -17,11 +17,9 @@ class Perceptron:
         :param X: data tensor
         :return: label tensor
         """
-        # TODO: verstehen warum das genau so funktioniert
-        # hier ist mm nicht das gleiche wie matmul ?!
         # torch.sign gibt -1 oder 1 zurück je nachdem ob das argument negativ oder positiv ist
-        # nutzt also gradient descent ?!
-        # TODO: gradient descent verstehen
+        # und 0 falls das Argument genau 0 ist.
+        # TODO: FRAGE AN KORREKTUR: nutzt also gradient descent?
         return torch.sign(torch.matmul(X, self.weights) + self.bias)
 
     def train(self, X, y, epochs=10):
@@ -47,6 +45,7 @@ class Perceptron:
 
 if __name__ == '__main__':
     # TODO: darstellung der entscheidungsgrenze über epochen darstellen
+    # Zwei 2x3 Matrizen
 
     # erstelle die daten (2 features, 100 samples)
     data = make_moons(n_samples=100)
