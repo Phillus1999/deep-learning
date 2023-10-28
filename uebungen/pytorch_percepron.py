@@ -38,9 +38,8 @@ class Perceptron:
             # TODO: vielleicht hier auch vektorisieren und nicht iterativ ?
             for i in range(len(X)):
                 # passe die gewichte an
-                self.weights = self.weights + self.learning_rate * error[i] * X[i]
-                # passe den bias an
-                self.bias = self.bias + self.learning_rate * error[i]
+                self.weights = self.weights + self.learning_rate * torch.matmul(error, X)
+                self.bias = self.bias + self.learning_rate * torch.sum(error)
 
 
 if __name__ == '__main__':
