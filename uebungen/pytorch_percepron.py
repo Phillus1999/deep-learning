@@ -1,11 +1,11 @@
 import torch
-from sklearn.datasets import make_blobs, make_moons
+from sklearn.datasets import make_moons
 import matplotlib.pyplot as plt
 
 
 class Perceptron:
     # implement perceptron using pytorch
-    def __init__(self, num_inputs=2, learning_rate=0.01, plot=False):
+    def __init__(self, num_inputs=2, learning_rate=0.01):
         self.num_inputs = num_inputs
         self.weights = torch.ones(self.num_inputs)
         self.learning_rate = learning_rate
@@ -68,14 +68,14 @@ if __name__ == '__main__':
     ylim = (features[:, 1].min() - 0.1, features[:, 1].max() + 0.1)
 
     # plotte die daten mit richtigen labels
-    ax = fig.add_subplot(1,2,1)
+    ax = fig.add_subplot(1, 2, 1)
     ax.set_xlim(xlim)
     ax.set_ylim(ylim)
     plt.scatter(features[:, 0], features[:, 1], c=labels)
     plt.title('Original Labels')
 
     # plotte die daten mit den predictions
-    ax = fig.add_subplot(1,2,2)
+    ax = fig.add_subplot(1, 2, 2)
     ax.set_xlim(xlim)
     ax.set_ylim(ylim)
     plt.scatter(features[:, 0], features[:, 1], c=perc.forward(features))
@@ -85,6 +85,5 @@ if __name__ == '__main__':
     x1 = torch.tensor([features[:, 0].min(), features[:, 0].max()])
     x2 = -(perc.weights[0] * x1 + perc.bias) / perc.weights[1]
     plt.plot(x1, x2, '--r')
-
 
     plt.show()
