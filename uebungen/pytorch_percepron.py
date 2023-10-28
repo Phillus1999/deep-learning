@@ -11,7 +11,7 @@ class Perceptron:
         self.learning_rate = learning_rate
         self.bias = 1
 
-    def forward(self, X):
+    def calculate_labels(self, X):
         """
         berechnet die prediction des perceptrons
         :param X: data tensor
@@ -20,7 +20,6 @@ class Perceptron:
         # torch.sign gibt -1 oder 1 zurück je nachdem ob das argument negativ oder positiv ist
         # und 0 falls das Argument genau 0 ist.
         # TODO: FRAGE AN KORREKTUR: nutzt also gradient descent?
-        # TODO: NACHRICHT AN PHILLIP: WENN MAN :SIGN REMOVED; DANN KOMMEN CONTINUOUS-WERTE RAUS -> LÄUFT NICHT MEHR
         return torch.sign(torch.matmul(X, self.weights) + self.bias)
 
     def train(self, X, y, epochs=10):
@@ -33,14 +32,12 @@ class Perceptron:
         """
         for epoch in range(epochs):
             # erstellt einen tensor der selben länge wie X und füllt ihn mit den predictions
-            y_pred = self.forward(X)
+            y_pred = self.calculate_labels(X)
             # erstellt einen tensor der selben länge wie y_pred und füllt ihn mit den fehlern
             error = y - y_pred
             # TODO: vielleicht hier auch vektorisieren und nicht iterativ ?
-            for i in range(len(X)):
-                # passe die gewichte an
-                self.weights = self.weights + self.learning_rate * torch.matmul(error, X)
-                self.bias = self.bias + self.learning_rate * torch.sum(error)
+            self.weights = self.weights + self.learning_rate * torch.matmul(error, X)
+            self.bias = self.bias + self.learning_rate * torch.sum(error)
 
 
 if __name__ == '__main__':
@@ -77,7 +74,7 @@ if __name__ == '__main__':
     ax = fig.add_subplot(1, 2, 2)
     ax.set_xlim(xlim)
     ax.set_ylim(ylim)
-    plt.scatter(features[:, 0], features[:, 1], c=perc.forward(features))
+    plt.scatter(features[:, 0], features[:, 1], c=perc.calculate_labels(features))
     plt.title('Predicted Labels')
 
     # plotte die entscheidungsgrenze
